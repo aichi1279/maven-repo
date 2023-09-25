@@ -1,0 +1,27 @@
+apiVersion:apps/v1
+kind: Deployment
+metadate:
+  # Deploymentの名前。Namaspace内ではユニークである必要があります。
+  name: maven-hello
+
+# Deploymentのテンプレート
+spec:
+  # レプリカ数の指定
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maven-deploy
+      version: v1
+
+  # Podのテンプレート(PodTemplate)
+  template:
+    metadata:
+      labels:
+        app: maven-pod
+        version: v1
+
+    spec:
+      container:
+        - name: maven-repo
+          image: asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:latest
+          imagePullPolicy: Always
