@@ -20,10 +20,9 @@ steps:
     entrypoint: mvn
     args: ["package", "-Dmaven.test.skip=true"]
 
-  # ビルドフェーズ CodeBui;d
+  # ビルドフェーズ CodeBuild
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring", "--build-arg=JAR_FILE=target/hello-spring-1.0.0.jar", "."]
-    images: ["asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring"]
 
   # deploy container image to GKE
   - name: gcr.io/cloud-builders/gke-deploy
@@ -33,5 +32,5 @@ steps:
     - --location=asia-northeast1
     - --cluster=maven-cluster-1
 
-
+images: ["asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring"]
 # [END cloudbuild_maven -> clouddeploy]
