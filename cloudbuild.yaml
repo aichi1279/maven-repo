@@ -13,31 +13,65 @@
 # limitations under the License.
 # [START cloudbuild_maven]
 steps:
-  - name: maven:3-eclipse-temurin-17-alpine
-    entrypoint: mvn
-    args: ["test"]
-  - name: maven:3-eclipse-temurin-17-alpine
-    entrypoint: mvn
-    args: ["package", "-Dmaven.test.skip=true"]
-
-  # ビルドフェーズ CodeBuild
-  # Dockerを使用したビルド
-  # - name: gcr.io/cloud-builders/docker
-  #   args: ["build", "-t", "asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring", "--build-arg=JAR_FILE=target/hello-spring-1.0.0.jar", "."]
-
+  # -------------------------------------------
   - name: 'bash'
     script: |
       #!/usr/bin/env bash
-      echo "Hello World"
-      ls
+      echo "-------- START -----------"
+      echo "mvn test"
+  - name: maven:3-eclipse-temurin-17-alpine
+    entrypoint: mvn
+    args: ["test"]
+  # -------------------------------------------
 
-  # skaffold? pack?を使用したビルド (https://buildpacks.io/docs/tools/pack/cli/pack_build/)
-  - name: 'gcr.io/k8s-skaffold/pack'
-    entrypoint: 'pack'
-    args: ['build', '--builder=gcr.io/buildpacks/builder', '--publish', 'asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:latest']
+  # -------------------------------------------
+  - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+      echo "------------------------------------"
+      echo "mvn package -Dmaven.test.skip=true"
+  - name: maven:3-eclipse-temurin-17-alpine
+    entrypoint: mvn
+    args: ["package", "-Dmaven.test.skip=true"]
+  # -------------------------------------------
+
+  # -------------------------------------------
+  # ビルドフェーズ CodeBuild
+  # Dockerを使用したビルド
+   - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+      echo "------------------------------------"
+      echo "docker -t asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring --build-arg=JAR_FILE=target/hello-spring-1.0.0.jar ."
+
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring", "--build-arg=JAR_FILE=target/hello-spring-1.0.0.jar", "."]
+   # -------------------------------------------
+
+  # -------------------------------------------
+  # - name: 'bash'
+  #   script: |
+  #     #!/usr/bin/env bash
+  #     echo "------------------------------------"
+  #     echo "pack build --builder=gcr.io/buildpacks/builder --publish asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:latest"
+
+  # # skaffold? pack?を使用したビルド (https://buildpacks.io/docs/tools/pack/cli/pack_build/)
+  # - name: 'gcr.io/k8s-skaffold/pack'
+  #   entrypoint: 'pack'
+  #   args: ['build', '--builder=gcr.io/buildpacks/builder', '--publish', 'asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:latest']
+  # -------------------------------------------
+
 
   # - name: 'gcr.io/cloud-builders/gcloud'
   #   args: ['deploy', 'apply',  '--file=./clouddeploy.yaml', '--region', 'asia-northeast1', '--project=ascendant-voice-398405']
+
+
+  # -------------------------------------------
+  - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+      echo "------------------------------------"
+      echo "gcloud deploy releases create release-$BUILD_ID --delivery-pipeline=hello-world-app --region=asia-northeast1 --source=./ --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA"
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
@@ -49,6 +83,12 @@ steps:
       --region=asia-northeast1
       --source=./
       --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA
+  # -------------------------------------------
+
+  - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+      echo "--------------- END ----------------"
 
 images: ["asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring"]
 # [END cloudbuild_maven]
