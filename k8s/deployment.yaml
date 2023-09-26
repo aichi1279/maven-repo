@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hellospring-deployment
+
+spec:
+  selector:
+    matchLabels:
+      app: hellospring
+  template:
+    metadata:
+      labels:
+        app: hellospring-template
+    spec:
+      containers:
+      - name: hellospring-container
+        image: asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:latest
+        ports:
+          - containerPort: 8080
