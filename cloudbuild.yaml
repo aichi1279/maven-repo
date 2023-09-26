@@ -38,7 +38,7 @@ steps:
   # -------------------------------------------
   # ビルドフェーズ CodeBuild
   # Dockerを使用したビルド
-   - name: 'bash'
+  - name: 'bash'
     script: |
       #!/usr/bin/env bash
       echo "------------------------------------"
