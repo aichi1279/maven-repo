@@ -25,6 +25,12 @@ steps:
   # - name: gcr.io/cloud-builders/docker
   #   args: ["build", "-t", "asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring", "--build-arg=JAR_FILE=target/hello-spring-1.0.0.jar", "."]
 
+  - name: 'bash'
+    script: |
+      #!/usr/bin/env bash
+      echo "Hello World"
+      ls
+
   # skaffold? pack?を使用したビルド (https://buildpacks.io/docs/tools/pack/cli/pack_build/)
   - name: 'gcr.io/k8s-skaffold/pack'
     entrypoint: 'pack'
@@ -34,17 +40,15 @@ steps:
   #   args: ['deploy', 'apply',  '--file=./clouddeploy.yaml', '--region', 'asia-northeast1', '--project=ascendant-voice-398405']
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - > 
-    gcloud deploy releases create release-$BUILD_ID
-    --delivery-pipeline=hello-world-app
-    --region=asia-northeast1
-    --source=./
-    --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA
-
-
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - > 
+      gcloud deploy releases create release-$BUILD_ID
+      --delivery-pipeline=hello-world-app
+      --region=asia-northeast1
+      --source=./
+      --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA
 
 images: ["asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring"]
 # [END cloudbuild_maven]
