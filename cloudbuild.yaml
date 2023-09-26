@@ -41,7 +41,7 @@ steps:
   - name: 'bash'
     script: |
       #!/usr/bin/env bash
-      ll
+      ls
       echo "------------------------------------"
       echo "docker -t asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring --build-arg=JAR_FILE=target/hello-spring-1.0.0.jar ."
 
