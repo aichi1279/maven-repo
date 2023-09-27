@@ -72,7 +72,7 @@ steps:
     script: |
       #!/usr/bin/env bash
       echo "------------------------------------"
-      echo "gcloud deploy releases create release-$BUILD_ID --delivery-pipeline=hello-world-app --region=asia-northeast1 --source=./ --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA"
+      echo "gcloud deploy releases create release-$BUILD_ID --delivery-pipeline=hello-world-app --region=asia-northeast1 --source=./ --images=maven-hello-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:$SHORT_SHA"
 
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
@@ -83,7 +83,7 @@ steps:
       --delivery-pipeline=hello-world-app
       --region=asia-northeast1
       --source=./
-      --images=hello-world-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/my-docker-repo/hello-world:$SHORT_SHA
+      --images=maven-hello-app=asia-northeast1-docker.pkg.dev/ascendant-voice-398405/maven-repo/hellospring:$SHORT_SHA
   # -------------------------------------------
 
   - name: 'bash'
